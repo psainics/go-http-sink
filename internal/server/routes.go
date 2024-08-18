@@ -13,7 +13,6 @@ func (s *Server) RegisterRoutes() http.Handler {
 	e.Use(middleware.Recover())
 
 	// Route Groups
-	
 	e.GET("/", s.HelloWorldHandler)
 	return e
 }

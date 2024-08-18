@@ -2,15 +2,20 @@ package main
 
 import (
 	"fmt"
+	"httpsink/internal/database"
 	"httpsink/internal/server"
+	"log/slog"
 	"net/http"
 	"os"
 	"os/signal"
 	"syscall"
+
+	"github.com/samber/lo"
 )
 
 func main() {
-	server := server.NewServer()
+	appDb := database.GetDatabase()
+	server := server.NewServer(appDb)
 
 	// Graceful shutdown
 	quit := make(chan os.Signal, 1)
@@ -18,11 +23,12 @@ func main() {
 
 	go func() {
 		<-quit
-		fmt.Println("Shutting down...")
-		server.Close()
+		slog.Info("Shutting down...")
+		lo.Must0(lo.Must(appDb.DB()).Close())
+		lo.Must0(server.Close())
 	}()
 
-	fmt.Println("Server is ready to handle requests at", server.Addr)
+	slog.Info(fmt.Sprintf("Server is ready to handle requests at %s", server.Addr))
 	err := server.ListenAndServe()
 	if err != http.ErrServerClosed {
 		panic(fmt.Sprintf("Failed to start server: %v", err))

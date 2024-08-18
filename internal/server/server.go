@@ -5,14 +5,17 @@ import (
 	"httpsink/internal/config"
 	"net/http"
 	"time"
+
+	"gorm.io/gorm"
 )
 
 type Server struct {
 	port int
+	db   *gorm.DB
 }
 
-func NewServer() *http.Server {
-	newServer := &Server{port: config.SERVER_PORT}
+func NewServer(db *gorm.DB) *http.Server {
+	newServer := &Server{port: config.SERVER_PORT, db: db}
 	return &http.Server{
 		Addr:         fmt.Sprintf(":%d", newServer.port),
 		Handler:      newServer.RegisterRoutes(),
