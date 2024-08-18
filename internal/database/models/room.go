@@ -11,10 +11,18 @@ type Room struct {
 	ID int `json:"id" gorm:"primaryKey"`
 }
 
+func (r *Room) TableName() string {
+	return "rooms"
+}
+
 type TestCase struct {
 	gorm.Model
 	ID   int    `json:"id" gorm:"primaryKey"`
 	Name string `json:"name"`
+}
+
+func (t *TestCase) TableName() string {
+	return "test_cases"
 }
 
 type TestResult struct {
@@ -28,4 +36,8 @@ type TestResult struct {
 	CreatedAt  time.Time `json:"createdAt"`
 	TestCaseID int       `json:"testCaseId"`
 	RoomID     int       `json:"roomId"`
+}
+
+func (t *TestResult) TableName() string {
+	return "test_results"
 }
