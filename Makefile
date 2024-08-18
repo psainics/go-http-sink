@@ -1,6 +1,12 @@
+BINARY_NAME := "httpsink"
+APP_NAME := "httpsink"
+
 all: run
 
-run:
-	@go run cmd/httpsink/main.go
+build:
+	@go build -o dist/$(BINARY_NAME) cmd/$(APP_NAME)/main.go
 
-.PHONY: all run  
+run:
+	@go run cmd/$(APP_NAME)/main.go
+
+.PHONY: all build run  
